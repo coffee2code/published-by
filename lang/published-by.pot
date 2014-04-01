@@ -1,0 +1,42 @@
+# Translation of the WordPress plugin Published By v1.0 by Scott Reilly.
+# Copyright (C) 2014 Scott Reilly
+# This file is distributed under the same license as the Published By plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Published By 1.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/published-by\n"
+"POT-Creation-Date: 2014-04-01 18:57:45+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: published-by.php:154
+msgid "Published by: %s"
+msgstr ""
+
+#. #-#-#-#-#  published-by.pot (Published By 1.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: published-by.php:168
+msgid "Published By"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://coffee2code.com/wp-plugins/published-by/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Track which user actually published a post, separate from who created the "
+"post. Display that info as a column in admin post listings."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Scott Reilly"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://coffee2code.com/"
+msgstr ""
