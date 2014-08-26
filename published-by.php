@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Published By
- * Version:     1.0
+ * Version:     1.0.1
  * Plugin URI:  http://coffee2code.com/wp-plugins/published-by/
  * Author:      Scott Reilly
  * Author URI:  http://coffee2code.com/
@@ -15,11 +15,11 @@
  *
  * =>> Read the accompanying readme.txt file for instructions and documentation.
  * =>> Also, visit the plugin's homepage for additional information and updates.
- * =>> Or visit: http://wordpress.org/plugins/published-by/
+ * =>> Or visit: https://wordpress.org/plugins/published-by/
  *
  * @package Published_By
  * @author  Scott Reilly
- * @version 1.0
+ * @version 1.0.1
  */
 
 /*
@@ -63,7 +63,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function version() {
-		return '1.0';
+		return '1.0.1';
 	}
 
 	/**
