@@ -62,6 +62,16 @@ class Published_By_Test extends WP_UnitTestCase {
 	 * TESTS
 	 */
 
+
+
+	function test_plugin_version() {
+		$this->assertEquals( '1.0.2', c2c_PublishedBy::version() );
+	}
+
+	function test_class_is_available() {
+		$this->assertTrue( class_exists( 'c2c_PublishedBy' ) );
+	}
+
 	function test_meta_key_not_created_for_post_saved_as_draft() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
