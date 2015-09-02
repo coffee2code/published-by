@@ -1,12 +1,12 @@
 === Published By ===
 Contributors: coffee2code
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6ARCFJ9TX3522
-Tags: post, publish, publisher, editor, author, audit, auditing, tracking, coffee2code
+Tags: post, publish, publisher, editor, author, audit, auditing, tracking, users, coffee2code
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.6
-Tested up to: 4.1
-Stable tag: 1.0.2
+Tested up to: 4.3
+Stable tag: 1.0.3
 
 Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
 
@@ -49,6 +49,11 @@ Yes.
 
 == Changelog ==
 
+= 1.0.3 (2015-09-02) =
+* Change: Use `dirname(__FILE__)` instead of `__DIR__` since the latter is only available on PHP 5.3+.
+* Change: Minor tweaks to formatting for inline docs.
+* Change: Note compatibility through WP 4.3+.
+
 = 1.0.2 (2015-02-17) =
 * Minor additions to unit tests
 * Use __DIR__ instead of `dirname(__FILE__)`
@@ -69,6 +74,9 @@ Yes.
 
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Minor bugfix release for users running PHP 5.2.x: revert use of a constant only defined in PHP 5.3+. You really should upgrade your PHP or your host if this affects you. Also noted compatibility with WP 4.3+.
 
 = 1.0.2 =
 Trivial update: minor additions to unit tests; noted compatibility through WP 4.1+; updated copyright date (2015)

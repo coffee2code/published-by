@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Published By
- * Version:     1.0.2
+ * Version:     1.0.3
  * Plugin URI:  http://coffee2code.com/wp-plugins/published-by/
  * Author:      Scott Reilly
  * Author URI:  http://coffee2code.com/
@@ -11,7 +11,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Description: Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
  *
- * Compatible with WordPress 3.6 through 4.1+.
+ * Compatible with WordPress 3.6 through 4.3+.
  *
  * =>> Read the accompanying readme.txt file for instructions and documentation.
  * =>> Also, visit the plugin's homepage for additional information and updates.
@@ -19,15 +19,15 @@
  *
  * @package Published_By
  * @author  Scott Reilly
- * @version 1.0.2
+ * @version 1.0.3
  */
 
 /*
-TODO:
-	* Add template tags that parallel author-related template tags, such as:
-	  get_the_publisher, the_publisher, get_publisher_id, get_publisher_link
-	* Provisions to disable/enable per post_type
-*/
+ * TODO:
+ * - Add template tags that parallel author-related template tags, such as:
+ *   get_the_publisher, the_publisher, get_publisher_id, get_publisher_link
+ * - Provisions to disable/enable per post_type
+ */
 
 /*
 	Copyright (c) 2014-2015 by Scott Reilly (aka coffee2code)
@@ -63,7 +63,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function version() {
-		return '1.0.2';
+		return '1.0.3';
 	}
 
 	/**
@@ -84,7 +84,7 @@ class c2c_PublishedBy {
 		self::$post_statuses = apply_filters( 'c2c_published_by_post_status', array( 'private', 'publish' ) );
 
 		// Load textdomain
-		load_plugin_textdomain( 'published-by', false, basename( __DIR__ ) );
+		load_plugin_textdomain( 'published-by', false, basename( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'lang' );
 
 		// Register hooks
 		add_filter( 'manage_posts_columns',        array( __CLASS__, 'add_post_column' )               );
@@ -163,6 +163,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 *
 	 * @param  array $posts_columns Array of post column titles.
+	 *
 	 * @return array The $posts_columns array with the 'published by' column's title added.
 	 */
 	public static function add_post_column( $posts_columns ) {
@@ -202,7 +203,8 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 *
 	 * @param  bool   $protected Is the meta key protected?
-	 * @param  string $meta_key  The meta key
+	 * @param  string $meta_key  The meta key.
+	 *
 	 * @return bool
 	 */
 	public static function hide_meta( $protected, $meta_key ) {
@@ -218,8 +220,8 @@ class c2c_PublishedBy {
 	 *
 	 * @since 1.0
 	 *
-	 * @param string  $new_status New post status
-	 * @param string  $old_status Old post status
+	 * @param string $new_status New post status.
+	 * @param string $old_status Old post status.
 	 */
 	public static function transition_post_status( $new_status, $old_status, $post ) {
 		// Only concerned with posts changing post status
