@@ -1,20 +1,22 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 class Published_By_Test extends WP_UnitTestCase {
 
 	protected static $meta_key = 'c2c-published-by';
 
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		$this->unset_current_user();
 	}
 
 
-
-	/*
-	 * HELPER FUNCTIONS
-	 */
-
+	//
+	//
+	// HELPER FUNCTIONS
+	//
+	//
 
 
 	private function create_user( $set_as_current = true ) {
@@ -30,18 +32,18 @@ class Published_By_Test extends WP_UnitTestCase {
 		global $current_user, $user_ID;
 
 		$current_user = $user_ID = null;
-    }
+	}
 
 	private function set_published_by( $post_id, $user_id = '' ) {
 		add_post_meta( $post_id, self::$meta_key, $user_id );
 	}
 
 
-
-	/*
-	 * FUNCTIONS FOR HOOKING ACTIONS/FILTERS
-	 */
-
+	//
+	//
+	// FUNCTIONS FOR HOOKING ACTIONS/FILTERS
+	//
+	//
 
 
 	public function query_for_posts( $text ) {
@@ -59,22 +61,22 @@ class Published_By_Test extends WP_UnitTestCase {
 	}
 
 
+	//
+	//
+	// TESTS
+	//
+	//
 
-	/*
-	 * TESTS
-	 */
 
-
-
-	function test_plugin_version() {
-		$this->assertEquals( '1.0.3', c2c_PublishedBy::version() );
+	public function test_plugin_version() {
+		$this->assertEquals( '1.1', c2c_PublishedBy::version() );
 	}
 
-	function test_class_is_available() {
+	public function test_class_is_available() {
 		$this->assertTrue( class_exists( 'c2c_PublishedBy' ) );
 	}
 
-	function test_meta_key_not_created_for_post_saved_as_draft() {
+	public function test_meta_key_not_created_for_post_saved_as_draft() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -85,7 +87,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEmpty( get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_meta_key_not_created_for_post_saved_as_pending() {
+	public function test_meta_key_not_created_for_post_saved_as_pending() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -97,7 +99,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEmpty( get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_meta_key_created_for_published_post() {
+	public function test_meta_key_created_for_published_post() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -108,7 +110,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user_id, get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_meta_key_updated_for_republished_post() {
+	public function test_meta_key_updated_for_republished_post() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user1_id  = $this->create_user( false );
@@ -126,7 +128,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user2_id, get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_meta_used_as_publisher_when_present() {
+	public function test_meta_used_as_publisher_when_present() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -137,7 +139,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user_id, get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_author_of_latest_revision_used_as_publisher_when_meta_not_present() {
+	public function test_author_of_latest_revision_used_as_publisher_when_meta_not_present() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -147,14 +149,14 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEmpty(  get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_author_of_post_used_as_publisher_when_meta_or_revisions_not_present() {
+	public function test_author_of_post_used_as_publisher_when_meta_or_revisions_not_present() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
 
 		$this->assertEquals( $author_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
 	}
 
-	function test_nothing_returned_if_post_is_not_published() {
+	public function test_nothing_returned_if_post_is_not_published() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id   = $this->create_user();
@@ -166,7 +168,7 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user_id, get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
-	function test_editing_published_post_does_not_change_publisher() {
+	public function test_editing_published_post_does_not_change_publisher() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
 		$user_id1  = $this->create_user();

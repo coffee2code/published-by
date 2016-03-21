@@ -1,17 +1,16 @@
 <?php
 /**
  * Plugin Name: Published By
- * Version:     1.0.3
+ * Version:     1.1
  * Plugin URI:  http://coffee2code.com/wp-plugins/published-by/
  * Author:      Scott Reilly
  * Author URI:  http://coffee2code.com/
  * Text Domain: published-by
- * Domain Path: /lang/
  * License:     GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Description: Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
  *
- * Compatible with WordPress 3.6 through 4.3+.
+ * Compatible with WordPress 3.6 through 4.4+.
  *
  * =>> Read the accompanying readme.txt file for instructions and documentation.
  * =>> Also, visit the plugin's homepage for additional information and updates.
@@ -19,7 +18,7 @@
  *
  * @package Published_By
  * @author  Scott Reilly
- * @version 1.0.3
+ * @version 1.1
  */
 
 /*
@@ -27,10 +26,12 @@
  * - Add template tags that parallel author-related template tags, such as:
  *   get_the_publisher, the_publisher, get_publisher_id, get_publisher_link
  * - Provisions to disable/enable per post_type
+ * - Hook to allow defining custom logic for guessing publishing user for older
+ *   posts.
  */
 
 /*
-	Copyright (c) 2014-2015 by Scott Reilly (aka coffee2code)
+	Copyright (c) 2014-2016 by Scott Reilly (aka coffee2code)
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -63,7 +64,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function version() {
-		return '1.0.3';
+		return '1.1';
 	}
 
 	/**
@@ -84,7 +85,7 @@ class c2c_PublishedBy {
 		self::$post_statuses = apply_filters( 'c2c_published_by_post_status', array( 'private', 'publish' ) );
 
 		// Load textdomain
-		load_plugin_textdomain( 'published-by', false, basename( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'lang' );
+		load_plugin_textdomain( 'published-by' );
 
 		// Register hooks
 		add_filter( 'manage_posts_columns',        array( __CLASS__, 'add_post_column' )               );
@@ -246,7 +247,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 *
 	 * @param  int $post_id The id of the post being displayed.
-	 * @return int The ID of the user who published the post.
+	 * @return int The ID of the user who published the post. Will be 0 if user is unknown.
 	 */
 	public static function get_publisher_id( $post_id ) {
 		$publisher_id = 0;

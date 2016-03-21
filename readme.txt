@@ -5,8 +5,8 @@ Tags: post, publish, publisher, editor, author, audit, auditing, tracking, users
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 3.6
-Tested up to: 4.3
-Stable tag: 1.0.3
+Tested up to: 4.4
+Stable tag: 1.1
 
 Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
 
@@ -49,6 +49,17 @@ Yes.
 
 == Changelog ==
 
+= 1.1 (2016-03-21) =
+* Change: Add support for language packs:
+    * Don't load plugin translations from file.
+    * Remove 'Domain Path' from plugin header.
+    * Remove .pot file and /lang subdirectory.
+* Change: Explicitly declare methods in unit tests as public.
+* New: Add LICENSE file.
+* New: Add empty index.php to prevent files from being listed if web server has enabled directory listings.
+* Change: Note compatibility through WP 4.4+.
+* Change: Update copyright date (2016).
+
 = 1.0.3 (2015-09-02) =
 * Change: Use `dirname(__FILE__)` instead of `__DIR__` since the latter is only available on PHP 5.3+.
 * Change: Minor tweaks to formatting for inline docs.
@@ -74,6 +85,9 @@ Yes.
 
 
 == Upgrade Notice ==
+
+= 1.1 =
+Minor update: improve support for localization; verified compatibility through WP 4.4; updated copyright date (2016)
 
 = 1.0.3 =
 Minor bugfix release for users running PHP 5.2.x: revert use of a constant only defined in PHP 5.3+. You really should upgrade your PHP or your host if this affects you. Also noted compatibility with WP 4.3+.
