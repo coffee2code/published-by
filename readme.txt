@@ -42,6 +42,10 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plu
 
 The user most recently responsible for a post getting published will be recorded as the publishing user. Editing a published post does not change the publishing user.
 
+= How do I see (or hide) the "Published By" column in an admin listing of posts? =
+
+In the upper-right of the page is a "Screen Options" link that reveals a panel of options. In the "Columns" section, check (to show) or uncheck (to hide) the "Published By" option.
+
 = Does this plugin include unit tests? =
 
 Yes.
@@ -55,6 +59,7 @@ Yes.
 * Change: Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable.
 * Change: Note compatibility through WP 4.7+.
 * Change: Remove support for WordPress older than 4.6 (should still work for earlier versions)
+* New: Add FAQ about showing or hiding the "Published By" column.
 * Change: Update copyright date (2017).
 
 = 1.1 (2016-03-21) =
