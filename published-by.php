@@ -94,6 +94,7 @@ class c2c_PublishedBy {
 		add_action( 'manage_pages_custom_column',  array( __CLASS__, 'handle_column_data' ),     10, 2 );
 
 		add_action( 'load-edit.php',               array( __CLASS__, 'add_admin_css' )                 );
+		add_action( 'load-post.php',               array( __CLASS__, 'add_admin_css' )                 );
 		add_action( 'transition_post_status',      array( __CLASS__, 'transition_post_status' ), 10, 3 );
 		add_filter( 'is_protected_meta',           array( __CLASS__, 'hide_meta' ),              10, 2 );
 		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'show_publisher' )                );
@@ -130,7 +131,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function admin_css() {
-		echo "<style type='text/css'>.fixed .column-" . self::$field . " { width: 10%; }</style>\n";
+		echo "<style type='text/css'>.fixed .column-" . self::$field . " {width:10%;} #c2c-published-by {font-weight:600;} #c2c-published-by a {color:#444;}</style>\n";
 	}
 
 	/**
@@ -153,9 +154,33 @@ class c2c_PublishedBy {
 
 		$publisher = get_userdata( $publisher_id );
 
+		if ( get_current_user_id() === $publisher_id ) {
+			$user_link = '<b>you</b>';
+		} else {
+			$user_link = sprintf(
+				'<span id="c2c-published-by"><a href="%s">%s</a></span>',
+				self::get_user_url( $publisher_id ),
+				sanitize_text_field( $publisher->display_name )
+			);
+		}
+
 		echo '<div class="misc-pub-section curtime misc-pub-curtime">';
-		echo sprintf( __( 'Published by: %s', 'published-by' ), sanitize_text_field( $publisher->display_name ) );
+		printf( __( 'Published by: %s', 'published-by' ), $user_link );
 		echo '</div>';
+	}
+
+	/**
+	 * Returns the URL for the user.
+	 *
+	 * @since 1.2
+	 *
+	 * @param  int $user_id The user ID.
+	 * @return string
+	 */
+	public static function get_user_url( $user_id ) {
+		if ( (int) $user_id ) {
+			return self_admin_url( 'user-edit.php?user_id=' . (int) $user_id );
+		}
 	}
 
 	/**
@@ -192,8 +217,17 @@ class c2c_PublishedBy {
 		if ( self::$field === $column_name ) {
 			$publisher_id = self::get_publisher_id( $post_id );
 			if ( $publisher_id ) {
-				$publisher = get_userdata( $publisher_id );
-				echo sanitize_text_field( $publisher->display_name );
+				if ( get_current_user_id() === $publisher_id ) {
+					$user_link = 'you';
+				} else {
+					$publisher = get_userdata( $publisher_id );
+					$user_link = sprintf(
+						'<a href="%s">%s</a>',
+						self::get_user_url( $publisher_id ),
+						sanitize_text_field( $publisher->display_name )
+					);
+				}
+				echo $user_link;
 			}
 		}
 	}

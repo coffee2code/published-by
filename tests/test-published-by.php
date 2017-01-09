@@ -185,4 +185,20 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user_id1, c2c_PublishedBy::get_publisher_id( $post_id ) );
 	}
 
+
+	/*
+	 * c2c_PublishedBy::get_user_url()
+	 */
+
+
+	public function test_get_user_url() {
+		$this->assertEquals( self_admin_url( 'user-edit.php?user_id=2' ), c2c_PublishedBy::get_user_url( 2 ) );
+		$this->assertEquals( self_admin_url( 'user-edit.php?user_id=3' ), c2c_PublishedBy::get_user_url( '3' ) );
+	}
+
+	public function test_get_user_url_with_invalid_user_id() {
+		$this->assertEmpty( c2c_PublishedBy::get_user_url( 0 ) );
+		$this->assertEmpty( c2c_PublishedBy::get_user_url( 'hello' ) );
+	}
+
 }

@@ -54,6 +54,10 @@ Yes.
 == Changelog ==
 
 = () =
+* New: When showing the 'Published by' user, link their display name to their profile page.
+    * Add `get_user_url()` to get the link to the user's profile
+    * Add styles for the 'Published by:' metabox appearance
+* Change: If the current user is the person who published the post, then simply state "you" as the name.
 * Change: Ensure `get_publisher_id()` returns an integer value.
 * Change: Enable more error output for unit tests.
 * Change: Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable.
