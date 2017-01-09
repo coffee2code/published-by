@@ -293,7 +293,7 @@ class c2c_PublishedBy {
 
 		}
 
-		return $publisher_id;
+		return (int) $publisher_id;
 	}
 
 } // end c2c_PublishedBy
