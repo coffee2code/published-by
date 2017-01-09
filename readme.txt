@@ -49,6 +49,9 @@ Yes.
 
 == Changelog ==
 
+= () =
+* Change: Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable.
+
 = 1.1 (2016-03-21) =
 * Change: Add support for language packs:
     * Don't load plugin translations from file.
