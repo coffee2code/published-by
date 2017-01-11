@@ -96,8 +96,25 @@ class c2c_PublishedBy {
 		add_action( 'load-edit.php',               array( __CLASS__, 'add_admin_css' )                 );
 		add_action( 'load-post.php',               array( __CLASS__, 'add_admin_css' )                 );
 		add_action( 'transition_post_status',      array( __CLASS__, 'transition_post_status' ), 10, 3 );
-		add_filter( 'is_protected_meta',           array( __CLASS__, 'hide_meta' ),              10, 2 );
 		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'show_publisher' )                );
+
+		self::register_meta();
+	}
+
+	/**
+	 * Registers the post meta field.
+	 *
+	 * @since 1.2
+	 */
+	public static function register_meta() {
+		register_meta( 'post', self::$meta_key, array(
+			'type'              => 'integer',
+			'description'       => __( 'The user who published the post', 'published-by' ),
+			'single'            => true,
+			'sanitize_callback' => 'absint',
+			'auth_callback'     => '__return_false',
+			'show_in_rest'      => true,
+		) );
 	}
 
 	/**
@@ -230,24 +247,6 @@ class c2c_PublishedBy {
 				echo $user_link;
 			}
 		}
-	}
-
-	/**
-	 * Hides the meta key from the custom field dropdown.
-	 *
-	 * @since 1.0
-	 *
-	 * @param  bool   $protected Is the meta key protected?
-	 * @param  string $meta_key  The meta key.
-	 *
-	 * @return bool
-	 */
-	public static function hide_meta( $protected, $meta_key ) {
-		if ( self::$meta_key == $meta_key ) {
-			return true;
-		}
-
-		return $protected;
 	}
 
 	/**

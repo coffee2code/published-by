@@ -57,6 +57,10 @@ Yes.
 * New: When showing the 'Published by' user, link their display name to their profile page.
     * Add `get_user_url()` to get the link to the user's profile
     * Add styles for the 'Published by:' metabox appearance
+* Register meta field via `register_meta()`
+    * Add own `register_meta()`
+    * Remove `hide_meta()` in favor of use of `register_meta()`
+    * Include meta field and value in REST API responses for posts
 * Change: If the current user is the person who published the post, then simply state "you" as the name.
 * Change: Ensure `get_publisher_id()` returns an integer value.
 * Change: Enable more error output for unit tests.
