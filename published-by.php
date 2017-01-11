@@ -59,6 +59,16 @@ class c2c_PublishedBy {
 	private static $post_statuses = array();
 
 	/**
+	 * List of post IDs for whom the previously invoked get_publisher_id()
+	 * returned a guessed publisher value.
+	 *
+	 * @since 1.2
+	 * @access private
+	 * @var array
+	 */
+	private static $guessed_publisher = array();
+
+	/**
 	 * Returns version of the plugin.
 	 *
 	 * @since 1.0
@@ -148,7 +158,12 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function admin_css() {
-		echo "<style type='text/css'>.fixed .column-" . self::$field . " {width:10%;} #c2c-published-by {font-weight:600;} #c2c-published-by a {color:#444;}</style>\n";
+		echo "<style type='text/css'>.fixed .column-" . self::$field . " {width:10%;}
+			#c2c-published-by {font-weight:600;}
+			#c2c-published-by a {color:#444;}
+			.c2c-published-by-guess {font-style:italic;}
+			.c2c-published-by-guess:after {content:'?';}
+			</style>\n";
 	}
 
 	/**
@@ -165,6 +180,8 @@ class c2c_PublishedBy {
 
 		$publisher_id = self::get_publisher_id( $post->ID );
 
+		$class = self::is_publisher_id_guessed( $post->ID ) ? 'c2c-published-by-guess' : '';
+
 		if ( ! $publisher_id ) {
 			return;
 		}
@@ -172,11 +189,12 @@ class c2c_PublishedBy {
 		$publisher = get_userdata( $publisher_id );
 
 		if ( get_current_user_id() === $publisher_id ) {
-			$user_link = '<b>you</b>';
+			$user_link = '<b class="' . $class . '">you</b>';
 		} else {
 			$user_link = sprintf(
-				'<span id="c2c-published-by"><a href="%s">%s</a></span>',
+				'<span id="c2c-published-by"><a href="%s" class="%s">%s</a></span>',
 				self::get_user_url( $publisher_id ),
+				$class,
 				sanitize_text_field( $publisher->display_name )
 			);
 		}
@@ -233,14 +251,17 @@ class c2c_PublishedBy {
 
 		if ( self::$field === $column_name ) {
 			$publisher_id = self::get_publisher_id( $post_id );
+			$class = self::is_publisher_id_guessed( $post_id ) ? 'c2c-published-by-guess' : '';
+
 			if ( $publisher_id ) {
 				if ( get_current_user_id() === $publisher_id ) {
-					$user_link = 'you';
+					$user_link = '<span class="' . $class . '">you</a>';
 				} else {
 					$publisher = get_userdata( $publisher_id );
 					$user_link = sprintf(
-						'<a href="%s">%s</a>',
+						'<a href="%s" class="%s">%s</a>',
 						self::get_user_url( $publisher_id ),
+						$class,
 						sanitize_text_field( $publisher->display_name )
 					);
 				}
@@ -275,6 +296,22 @@ class c2c_PublishedBy {
 	}
 
 	/**
+	 * Determines if the publisher_id returned by get_pubsliher_id() was guessed
+	 * or not.
+	 *
+	 * Note: presumes that `get_publisher_id()` was called for the given post_id
+	 * before using this function.
+	 *
+	 * @since 1.2
+	 *
+	 * @param  int  $post_id The id of the post being displayed.
+	 * @return bool True if the pubhlisher_id was guessed, false otherwise.
+	 */
+	public static function is_publisher_id_guessed( $post_id ) {
+		return in_array( $post_id, self::$guessed_publisher );
+	}
+
+	/**
 	 * Returns the ID of the user who published the post.
 	 *
 	 * @since 1.0
@@ -300,6 +337,11 @@ class c2c_PublishedBy {
 				// Allow disabling of the various checks to guess who published the post.
 				if ( apply_filters( 'c2c_published_by_skip_guessing', false, $post_id ) ) {
 					break;
+				}
+
+				// Make note that the publisher of this post was a guess.
+				if ( ! self::is_publisher_id_guessed( $post_id ) ) {
+					self::$guessed_publisher[] = $post_id;
 				}
 
 				// Use the user WP saved as the latest editor

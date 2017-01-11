@@ -153,6 +153,8 @@ class Published_By_Test extends WP_UnitTestCase {
 
 		$this->assertEquals( $user_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
 		$this->assertEquals( $user_id, get_post_meta( $post_id, self::$meta_key, true ) );
+
+		return $post_id;
 	}
 
 	public function test_author_of_latest_revision_used_as_publisher_when_meta_not_present() {
@@ -163,6 +165,8 @@ class Published_By_Test extends WP_UnitTestCase {
 
 		$this->assertEquals( $user_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
 		$this->assertEmpty(  get_post_meta( $post_id, self::$meta_key, true ) );
+
+		return $post_id;
 	}
 
 	public function test_author_of_post_used_as_publisher_when_meta_or_revisions_not_present() {
@@ -170,6 +174,8 @@ class Published_By_Test extends WP_UnitTestCase {
 		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
 
 		$this->assertEquals( $author_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
+
+		return $post_id;
 	}
 
 	public function test_nothing_returned_if_post_is_not_published() {
@@ -215,6 +221,30 @@ class Published_By_Test extends WP_UnitTestCase {
 	public function test_get_user_url_with_invalid_user_id() {
 		$this->assertEmpty( c2c_PublishedBy::get_user_url( 0 ) );
 		$this->assertEmpty( c2c_PublishedBy::get_user_url( 'hello' ) );
+	}
+
+
+	/*
+	 * c2c_PublishedBy::is_publisher_id_guessed()
+	 */
+
+
+	public function test_is_publisher_id_guessed_when_meta_is_present() {
+		$post_id = self::test_meta_used_as_publisher_when_present();
+
+		$this->assertFalse( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
+	}
+
+	public function test_is_publisher_id_guessed_when_latest_revision_is_used() {
+		$post_id = self::test_author_of_latest_revision_used_as_publisher_when_meta_not_present();
+
+		$this->assertTrue( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
+	}
+
+	public function test_is_publisher_id_guessed_when_post_author_is_used() {
+		$post_id = self::test_author_of_post_used_as_publisher_when_meta_or_revisions_not_present();
+
+		$this->assertTrue( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
 	}
 
 

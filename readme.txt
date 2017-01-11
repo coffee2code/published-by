@@ -57,6 +57,9 @@ Yes.
 * New: When showing the 'Published by' user, link their display name to their profile page.
     * Add `get_user_url()` to get the link to the user's profile
     * Add styles for the 'Published by:' metabox appearance
+* Visually indicate when the 'published by' user for a post is guessed
+    * Add `is_publisher_id_guessed()` to determine if the publisher_id for a given post was guessed
+    * Display guessed publisher's name in italics with question mark at the end
 * Register meta field via `register_meta()`
     * Add own `register_meta()`
     * Remove `hide_meta()` in favor of use of `register_meta()`
