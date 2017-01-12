@@ -157,6 +157,19 @@ class Published_By_Test extends WP_UnitTestCase {
 		return $post_id;
 	}
 
+	public function test_last_modifying_author_used_as_publisher_when_meta_not_preset() {
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
+		$user_id   = $this->create_user();
+		add_post_meta( $post_id, '_edit_last', $user_id );
+
+		$this->assertEquals( $user_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
+		$this->assertEmpty(  get_post_meta( $post_id, self::$meta_key, true ) );
+		$this->assertEquals( $user_id, get_post_meta( $post_id, '_edit_last', true ) );
+
+		return $post_id;
+	}
+
 	public function test_author_of_latest_revision_used_as_publisher_when_meta_not_present() {
 		$author_id = $this->create_user( false );
 		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
@@ -233,6 +246,12 @@ class Published_By_Test extends WP_UnitTestCase {
 		$post_id = self::test_meta_used_as_publisher_when_present();
 
 		$this->assertFalse( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
+	}
+
+	public function test_is_publisher_id_guessed_when_edit_last_is_used() {
+		$post_id = self::test_last_modifying_author_used_as_publisher_when_meta_not_preset();
+
+		$this->assertTrue( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
 	}
 
 	public function test_is_publisher_id_guessed_when_latest_revision_is_used() {
