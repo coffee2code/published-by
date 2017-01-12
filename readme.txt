@@ -65,6 +65,7 @@ Yes.
     * Remove `hide_meta()` in favor of use of `register_meta()`
     * Include meta field and value in REST API responses for posts
 * Change: If the current user is the person who published the post, then simply state "you" as the name.
+* Change: Add more unit tests.
 * Change: Ensure `get_publisher_id()` returns an integer value.
 * Change: Enable more error output for unit tests.
 * Change: Default `WP_TESTS_DIR` to `/tmp/wordpress-tests-lib` rather than erroring out if not defined via environment variable.

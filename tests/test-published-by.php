@@ -25,6 +25,8 @@ class Published_By_Test extends WP_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 		$this->unset_current_user();
+
+		remove_filter( 'c2c_published_by_skip_guessing', '__return_true' );
 	}
 
 
@@ -292,6 +294,27 @@ class Published_By_Test extends WP_UnitTestCase {
 		$meta = (array) $data['meta'];
 		$this->assertArrayHasKey( self::$meta_key, $meta );
 		$this->assertEquals( $author_id, $meta[ self::$meta_key ] );
+	}
+
+
+	/**
+	 * Filter:
+	 */
+
+	public function test_filter_c2c_published_by_skip_guessing() {
+		add_filter( 'c2c_published_by_skip_guessing', '__return_true' );
+
+		$author_id = $this->create_user( true );
+		$post_id = $this->factory->post->create( array( 'post_status' => 'publish', 'post_author' => $author_id ) );
+		$user_id   = $this->create_user();
+		wp_save_post_revision( $post_id );
+		add_post_meta( $post_id, '_edit_last', $user_id );
+		delete_post_meta( $post_id, self::$meta_key );
+
+		$this->assertEmpty( get_post_meta( $post_id, self::$meta_key, true ) );
+		$this->assertEquals( $user_id, get_post_meta( $post_id, '_edit_last', true ) );
+		$this->assertEquals( 0, c2c_PublishedBy::get_publisher_id( $post_id ) );
+		$this->assertFalse( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
 	}
 
 }
