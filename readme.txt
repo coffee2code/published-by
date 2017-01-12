@@ -33,7 +33,8 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plu
 == Screenshots ==
 
 1. A screenshot of the admin post listing showing the added "Published By" column.
-2. A screenshot of the Publish metabox for a published post showing who published the post.
+2. A screenshot of the Publish metabox for a published post showing the current user who published the post.
+3. A screenshot of the Publish metabox for a published post showing another user who published the post.
 
 
 == Frequently Asked Questions ==
@@ -72,6 +73,7 @@ Yes.
 * Change: Note compatibility through WP 4.7+.
 * Change: Remove support for WordPress older than 4.6 (should still work for earlier versions)
 * New: Add FAQ about showing or hiding the "Published By" column.
+* Change: Update existing two screenshots and add a third.
 * Change: Update copyright date (2017).
 
 = 1.1 (2016-03-21) =
