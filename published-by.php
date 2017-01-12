@@ -54,8 +54,30 @@ if ( ! class_exists( 'c2c_PublishedBy' ) ) :
 
 class c2c_PublishedBy {
 
-	private static $meta_key      = 'c2c-published-by';
-	private static $field         = 'published_by';
+	/**
+	 * Name for meta key used to store id of publishing user.
+	 *
+	 * @access private
+	 * @var string
+	 */
+	private static $meta_key = 'c2c-published-by';
+
+	/**
+	 * Field name for the post listing column.
+	 *
+	 * @access private
+	 * @var string
+	 */
+	private static $field = 'published_by';
+
+	/**
+	 * Post statuses that should include the 'Published By' column.
+	 *
+	 * Set in `init()` and filterable via 'c2c_published_by_post_status'
+	 *
+	 * @access private
+	 * @var array
+	 */
 	private static $post_statuses = array();
 
 	/**
