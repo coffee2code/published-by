@@ -6,7 +6,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 4.6
 Tested up to: 4.7
-Stable tag: 1.1
+Stable tag: 1.2
 
 Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
 
@@ -58,14 +58,14 @@ Yes.
 
 == Changelog ==
 
-= () =
+= 1.2 (2017-01-12) =
 * New: When showing the 'Published by' user, link their display name to their profile page.
     * Add `get_user_url()` to get the link to the user's profile
     * Add styles for the 'Published by:' metabox appearance
-* Visually indicate when the 'published by' user for a post is guessed
+* New: Visually indicate when the 'published by' user for a post is guessed
     * Add `is_publisher_id_guessed()` to determine if the publisher_id for a given post was guessed
     * Display guessed publisher's name in italics with question mark at the end
-* Register meta field via `register_meta()`
+* Change: Register meta field via `register_meta()`
     * Add own `register_meta()`
     * Remove `hide_meta()` in favor of use of `register_meta()`
     * Include meta field and value in REST API responses for posts
@@ -119,6 +119,9 @@ Yes.
 
 
 == Upgrade Notice ==
+
+= 1.2 =
+Recommended feature update: linked usernames to profiles, noted guessed publisher with italics and question mark, referred to currenet user as "you", registered meta field for REST API compatibility, compatibility is now WP 4.6-4.7+, updated copyright date (2017), and more
 
 = 1.1 =
 Minor update: improve support for localization; verified compatibility through WP 4.4; updated copyright date (2016)

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Published By
- * Version:     1.1
+ * Version:     1.2
  * Plugin URI:  http://coffee2code.com/wp-plugins/published-by/
  * Author:      Scott Reilly
  * Author URI:  http://coffee2code.com/
@@ -18,7 +18,7 @@
  *
  * @package Published_By
  * @author  Scott Reilly
- * @version 1.1
+ * @version 1.2
  */
 
 /*
@@ -28,6 +28,13 @@
  * - Provisions to disable/enable per post_type
  * - Hook to allow defining custom logic for guessing publishing user for older
  *   posts.
+ * - Introduce 'c2c_published-by_user_url' filter to permit customizing where
+ *   the user's name links to.
+ * - ...and/or provide a way to customize the link destination from among
+ *   choices: profile, user_url, admin listing of posts (of this post type) by
+ *   the user, front-end listing of posts (of this post type) by the user.
+ * - Hover text for guessed publisher name should say it's a guess and based on
+ *   what (i.e. last user to edit post, last revision to post, post author)
  */
 
 /*
@@ -86,7 +93,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function version() {
-		return '1.1';
+		return '1.2';
 	}
 
 	/**
