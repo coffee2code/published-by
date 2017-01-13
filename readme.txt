@@ -65,6 +65,9 @@ Yes.
     * Add own `register_meta()`
     * Remove `hide_meta()` in favor of use of `register_meta()`
     * Include meta field and value in REST API responses for posts
+* Change: Modify handling for 'c2c_published_by_post_status' filter
+    * Add and internally use`get_post_statuses()` as getter for post statuses that should have the 'Published By' column
+    * Allow more dynamic filtering by running the filter in `get_post_statuses()` rather than just once on 'init'
 * Change: If the current user is the person who published the post, then simply state "you" as the name.
 * Change: Add more unit tests.
 * Change: Ensure `get_publisher_id()` returns an integer value.

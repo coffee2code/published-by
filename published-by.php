@@ -71,16 +71,6 @@ class c2c_PublishedBy {
 	private static $field = 'published_by';
 
 	/**
-	 * Post statuses that should include the 'Published By' column.
-	 *
-	 * Set in `init()` and filterable via 'c2c_published_by_post_status'
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private static $post_statuses = array();
-
-	/**
 	 * List of post IDs for whom the previously invoked get_publisher_id()
 	 * returned a guessed publisher value.
 	 *
@@ -114,8 +104,6 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function do_init() {
-		self::$post_statuses = apply_filters( 'c2c_published_by_post_status', array( 'private', 'publish' ) );
-
 		// Load textdomain
 		load_plugin_textdomain( 'published-by' );
 
@@ -150,6 +138,15 @@ class c2c_PublishedBy {
 	}
 
 	/**
+	 * Returns the post statuses that should show the "Published By" column.
+	 *
+	 * @since 1.2
+	 */
+	public static function get_post_statuses() {
+		return (array) apply_filters( 'c2c_published_by_post_status', array( 'private', 'publish' ) );
+	}
+
+	/**
 	 * Determines if the Published By column should be shown.
 	 *
 	 * @since 1.0
@@ -157,7 +154,7 @@ class c2c_PublishedBy {
 	 * @return bool
 	 */
 	private static function include_column() {
-		return ( ! isset( $_GET['post_status'] ) || in_array( $_GET['post_status'], self::$post_statuses ) );
+		return ( ! isset( $_GET['post_status'] ) || in_array( $_GET['post_status'], self::get_post_statuses() ) );
 	}
 
 	/**
@@ -196,7 +193,7 @@ class c2c_PublishedBy {
 	public static function show_publisher() {
 		global $post;
 
-		if ( ! in_array( $post->post_status, self::$post_statuses ) ) {
+		if ( ! in_array( $post->post_status, self::get_post_statuses() ) ) {
 			return;
 		}
 
@@ -345,7 +342,7 @@ class c2c_PublishedBy {
 		$publisher_id = 0;
 		$post         = get_post( $post_id );
 
-		if ( $post && in_array( get_post_status( $post_id ), self::$post_statuses ) ) {
+		if ( $post && in_array( get_post_status( $post_id ), self::get_post_statuses() ) ) {
 
 			do {
 

@@ -5,6 +5,7 @@ defined( 'ABSPATH' ) or die();
 class Published_By_Test extends WP_UnitTestCase {
 
 	protected static $meta_key = 'c2c-published-by';
+	protected static $default_c2c_published_by_post_status = array();
 
 	/**
 	 * Test REST Server
@@ -26,6 +27,8 @@ class Published_By_Test extends WP_UnitTestCase {
 		parent::tearDown();
 		$this->unset_current_user();
 
+		remove_filter( 'c2c_published_by_post_status', array( $this, 'check_default_c2c_published_by_post_status' ) );
+		remove_filter( 'c2c_published_by_post_status', array( $this, 'c2c_published_by_post_status' ) );
 		remove_filter( 'c2c_published_by_skip_guessing', '__return_true' );
 	}
 
@@ -76,6 +79,15 @@ class Published_By_Test extends WP_UnitTestCase {
 			'value'   => '1',
 			'compare' => '='
 		);
+	}
+
+	public function check_default_c2c_published_by_post_status( $post_statuses ) {
+		return self::$default_c2c_published_by_post_status = $post_statuses;
+	}
+
+	public function c2c_published_by_post_status( $post_statuses ) {
+		$post_statuses[] = 'trash';
+		return $post_statuses;
 	}
 
 
@@ -224,6 +236,16 @@ class Published_By_Test extends WP_UnitTestCase {
 
 
 	/*
+	 * c2c_PublishedBy::get_post_statuses()
+	 */
+
+
+	public function test_get_post_statuses() {
+		$this->assertEquals( array( 'private', 'publish' ), c2c_PublishedBy::get_post_statuses() );
+	}
+
+
+	/*
 	 * c2c_PublishedBy::get_user_url()
 	 */
 
@@ -298,7 +320,25 @@ class Published_By_Test extends WP_UnitTestCase {
 
 
 	/**
-	 * Filter:
+	 * Filter: c2c_published_by_post_status
+	 */
+
+
+	public function test_filter_default_c2c_published_by_post_status() {
+		add_filter( 'c2c_published_by_post_status', array( $this, 'check_default_c2c_published_by_post_status' ) );
+		c2c_PublishedBy::get_post_statuses();
+		$this->assertEquals( array( 'private', 'publish' ), self::$default_c2c_published_by_post_status );
+		self::$default_c2c_published_by_post_status = array();
+	}
+
+	public function test_filter_c2c_published_by_post_status() {
+		add_filter( 'c2c_published_by_post_status', array( $this, 'c2c_published_by_post_status' ) );
+		$this->assertEquals( array( 'private', 'publish', 'trash' ), c2c_PublishedBy::get_post_statuses() );
+	}
+
+
+	/**
+	 * Filter: c2c_published_by_skip_guessing
 	 */
 
 	public function test_filter_c2c_published_by_skip_guessing() {
