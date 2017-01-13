@@ -16,7 +16,7 @@ This plugin records which user actually published a post, which in a multi-autho
 
 The admin listing of posts is amended with a new "Published By" column that shows the name of the person who published the post (for those posts that have actually been published).
 
-For posts that were published prior to the use of this plugin (and thus the plugin could not directly record who published those posts), the plugin makes a best guess attempt to ascertain who published the post. After failing to find the publisher of the post as recorded by the plugin, it checks for who last edited the post, then who is responsible for the latest revision of the post, and finally failing those, it assumes it was the post author. If you'd rather the plugin not make an attempt to guess the publisher, you can disable the checks by including this snippet in your theme's functions.php (or, ideally, a site-specific mu-plugin):
+For posts that were published prior to the use of this plugin (and thus the plugin could not directly record who published those posts), the plugin makes a best guess attempt to ascertain who published the post. After failing to find the publisher of the post as recorded by the plugin, it checks for who last edited the post, then who is responsible for the latest revision of the post, and finally failing those, it assumes it was the post author. In cases where it had to go through this process, the name of the person it deduced as the likely publisher appears italicized and with a question mark at the end. If you'd rather the plugin not make an attempt to guess the publisher, you can disable the checks by including this snippet in your theme's functions.php (or, ideally, a site-specific mu-plugin):
 
 `<?php add_filter( 'c2c_published_by_skip_guessing', '__return_true' ); ?>`
 
@@ -32,7 +32,7 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plu
 
 == Screenshots ==
 
-1. A screenshot of the admin post listing showing the added "Published By" column.
+1. A screenshot of the admin post listing showing the added "Published By" column. It demonstrates the mix of a post puublished by the current user, a post poblished by another user and two posts that existed before the plugin was activated (one guessed to be published by the current user and one guessed to be published by yet another user).
 2. A screenshot of the Publish metabox for a published post showing the current user who published the post.
 3. A screenshot of the Publish metabox for a published post showing another user who published the post.
 
@@ -46,6 +46,10 @@ The user most recently responsible for a post getting published will be recorded
 = How do I see (or hide) the "Published By" column in an admin listing of posts? =
 
 In the upper-right of the page is a "Screen Options" link that reveals a panel of options. In the "Columns" section, check (to show) or uncheck (to hide) the "Published By" option.
+
+= Why does the person's name listed as the "Published By" user appear in italics with a question mark at the end? =
+
+It's an indication that for the given post the name shown is a guess by the plugin based on existing post data. For posts that were published prior to the use of this plugin (and thus the plugin could not directly record who published those posts), the plugin makes a best guess attempt to ascertain who published the post. After failing to find the publisher of the post as recorded by the plugin, it checks for who last edited the post, then who is responsible for the latest revision of the post, and finally failing those, it assumes it was the post author. It's likely that the guess is correct, but it's impossible to say for certain when the plugin isn't activated when posts were published.
 
 = Does this plugin include unit tests? =
 
