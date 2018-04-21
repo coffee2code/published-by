@@ -21,7 +21,7 @@ For posts that were published prior to the use of this plugin (and thus the plug
 `<?php add_filter( 'c2c_published_by_skip_guessing', '__return_true' ); ?>`
 
 
-Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plugin Directory Page](https://wordpress.org/plugins/published-by/) | [Author Homepage](http://coffee2code.com)
+Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plugin Directory Page](https://wordpress.org/plugins/published-by/) | [GitHub](https://github.com/coffee2code/published-by/) | [Author Homepage](http://coffee2code.com)
 
 
 == Installation ==
@@ -59,6 +59,7 @@ Yes.
 == Changelog ==
 
 = () =
+* Change: Add GitHub link to readme
 * Change: Note compatibility through WP 4.9+
 * Change: Update copyright date (2018)
 
