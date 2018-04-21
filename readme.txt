@@ -58,6 +58,9 @@ Yes.
 
 == Changelog ==
 
+= () =
+* Change: Update copyright date (2018)
+
 = 1.2 (2017-01-12) =
 * New: When showing the 'Published by' user, link their display name to their profile page.
     * Add `get_user_url()` to get the link to the user's profile
