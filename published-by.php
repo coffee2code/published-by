@@ -281,7 +281,7 @@ class c2c_PublishedBy {
 
 			if ( $publisher_id ) {
 				if ( get_current_user_id() === $publisher_id ) {
-					$user_link = '<span class="' . $class . '">you</a>';
+					$user_link = '<span class="' . $class . '">you</span>';
 				} else {
 					$publisher = get_userdata( $publisher_id );
 					$user_link = sprintf(

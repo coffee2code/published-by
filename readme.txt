@@ -59,6 +59,7 @@ Yes.
 == Changelog ==
 
 = () =
+* Fix: Properly close a 'span' tag
 * New: Add README.md
 * Change: Minor whitespace tweaks to unit test bootstrap
 * Change: Add GitHub link to readme
