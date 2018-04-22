@@ -286,7 +286,7 @@ class c2c_PublishedBy {
 					$publisher = get_userdata( $publisher_id );
 					$user_link = sprintf(
 						'<a href="%s" class="%s">%s</a>',
-						self::get_user_url( $publisher_id ),
+						esc_url( self::get_user_url( $publisher_id ) ),
 						$class,
 						sanitize_text_field( $publisher->display_name )
 					);

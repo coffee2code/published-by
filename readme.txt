@@ -60,6 +60,7 @@ Yes.
 
 = () =
 * Fix: Properly close a 'span' tag
+* Change: Ensure user profile URL is sanitized before display (hardening)
 * New: Add README.md
 * Change: Minor whitespace tweaks to unit test bootstrap
 * Change: Add GitHub link to readme
