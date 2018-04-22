@@ -303,7 +303,7 @@ class Published_By_Test extends WP_UnitTestCase {
 	public function test_rest_post_request_includes_meta() {
 		$author_id = $this->create_user( false );
 		$post_id = $this->factory->post->create( array( 'post_status' => 'publish', 'post_author' => $author_id ) );
-		add_post_meta( $post_id, self::$meta_key, $author_id );
+		$this->set_published_by( $post_id, $author_id );
 
 		$request = new WP_REST_Request( 'GET', sprintf( '/wp/v2/posts/%d', $post_id ) );
 		$response = $this->server->dispatch( $request );
