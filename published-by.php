@@ -351,6 +351,8 @@ class c2c_PublishedBy {
 
 		if ( $post && in_array( get_post_status( $post_id ), self::get_post_statuses() ) ) {
 
+			$post_id = $post->ID;
+
 			do {
 
 				// Use publisher id saved in custom field by the plugin.
