@@ -26,7 +26,7 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plu
 
 == Installation ==
 
-1. Unzip `published-by.zip` inside the plugins directory for your site (typically `/wp-content/plugins/`). Or install via the built-in WordPress plugin installer)
+1. Install via the built-in WordPress plugin installer. Or download and unzip `published-by.zip` inside the plugins directory for your site (typically `wp-content/plugins/`)
 2. Activate the plugin through the 'Plugins' admin menu in WordPress
 
 
@@ -66,6 +66,7 @@ Yes.
 * Change: Add GitHub link to readme
 * Change: Note compatibility through WP 4.9+
 * Change: Update copyright date (2018)
+* Change: Update installation instruction to prefer built-in installer over .zip file
 
 = 1.2 (2017-01-12) =
 * New: When showing the 'Published by' user, link their display name to their profile page.
