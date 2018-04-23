@@ -161,7 +161,7 @@ class c2c_PublishedBy {
 	 * @return bool
 	 */
 	private static function include_column() {
-		return ( ! isset( $_GET['post_status'] ) || in_array( $_GET['post_status'], self::get_post_statuses() ) );
+		return ( ! isset( $_GET['post_status'] ) || 'all' === $_GET['post_status'] || in_array( $_GET['post_status'], self::get_post_statuses() ) );
 	}
 
 	/**

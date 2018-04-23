@@ -59,6 +59,7 @@ Yes.
 == Changelog ==
 
 = () =
+* Fix: Show column even when post listing is being filtered
 * Fix: Properly close a 'span' tag
 * Change: Ensure user profile URL is sanitized before display (hardening)
 * New: Add README.md
