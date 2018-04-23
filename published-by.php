@@ -219,7 +219,7 @@ class c2c_PublishedBy {
 		} else {
 			$user_link = sprintf(
 				'<span id="c2c-published-by"><a href="%s" class="%s">%s</a></span>',
-				self::get_user_url( $publisher_id ),
+				esc_url( self::get_user_url( $publisher_id ) ),
 				$class,
 				sanitize_text_field( $publisher->display_name )
 			);
