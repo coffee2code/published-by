@@ -35,6 +35,9 @@
  *   the user, front-end listing of posts (of this post type) by the user.
  * - Hover text for guessed publisher name should say it's a guess and based on
  *   what (i.e. last user to edit post, last revision to post, post author)
+ * - For published-by filter dropdown, either omit the dropdown (or switch to
+ *   text field) if the number of published-by users is excessive.
+ * - Document filters in readme
  */
 
 /*
@@ -124,6 +127,9 @@ class c2c_PublishedBy {
 		add_action( 'load-post.php',               array( __CLASS__, 'add_admin_css' )                 );
 		add_action( 'transition_post_status',      array( __CLASS__, 'transition_post_status' ), 10, 3 );
 		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'show_publisher' )                );
+
+		add_filter( 'parse_query',                 array( __CLASS__, 'filter_by_query' )               );
+		add_action( 'restrict_manage_posts',       array( __CLASS__, 'filter_by_dropdown' )            );
 
 		self::register_meta();
 	}
@@ -397,6 +403,97 @@ class c2c_PublishedBy {
 		}
 
 		return (int) $publisher_id;
+	}
+
+	/**
+	 * Displays a categories dropdown for filtering on the Posts list table.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param string $post_type Post type slug.
+	 */
+	public static function filter_by_dropdown( $post_type ) {
+		global $wpdb;
+
+		if ( ! self::include_column() ) {
+			return;
+		}
+
+		/**
+		 * Filters whether to remove the 'Published By' dropdown from the post list table.
+		 *
+		 * @since 1.3.0
+		 *
+		 * @param bool   $disable   Whether to disable the 'published by' dropdown. Default false.
+		 * @param string $post_type Post type slug.
+		 */
+		if ( false !== apply_filters( 'c2c_published_by_disable_filter_dropdown', false, $post_type ) ) {
+			return;
+		}
+
+		$published_by_sql = "SELECT DISTINCT pm.meta_value FROM {$wpdb->postmeta} pm
+			LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+			WHERE pm.meta_key = '%s'";
+		$published_by_fields = array( self::$meta_key );
+
+		if ( ! empty( $_GET['post_status'] ) && 'all' !== $_GET['post_status'] ) {
+			$published_by_sql .= " AND p.post_status = '%s'";
+			$published_by_fields[] = $_GET['post_status'];
+		}
+
+		if ( ! empty( $_GET['post_type'] ) && 'all' !== $_GET['post_type'] ) {
+			$published_by_sql .= " AND p.post_type = '%s'";
+			$published_by_fields[] = $_GET['post_type'];
+		}
+
+		$published_by_sql .= " ORDER BY pm.meta_value ASC";
+		$published_by = $wpdb->get_col( $wpdb->prepare( $published_by_sql, $published_by_fields ) );
+
+		// Return if no published-by users were found to filter by.
+		if ( ! $published_by ) {
+			return;
+		}
+?>
+		<label class="screen-reader-text" for="filter-by-published-by"><?php _e( 'Filter by published by', 'published-by' ); ?></label>
+		<select name="published-by" id="filter-by-published-by">
+			<option value=""><?php _e( 'All Published By', 'published-by' ); ?></option>
+<?php
+			$users = [];
+			foreach ( $published_by as $user_id ) {
+				$users[ $user_id ] = new WP_User( $user_id );
+			}
+			uasort( $users, function ( $a, $b ) { return strnatcmp( $a->display_name, $b->display_name ); } );
+			$current = empty( $_GET['published-by'] ) ? '' : $_GET['published-by'];
+			foreach ( $users as $user_id => $user ) {
+				printf( '<option value="%s"%s>%s</option>', esc_attr( $user_id ), selected( $user_id, $current, true ), $user->display_name );
+			}
+?>
+		</select>
+<?php
+	}
+
+	/**
+	 * Filters post query for admin post listings to filter by published-by.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param string $query Query object.
+	 */
+	public static function filter_by_query( $query ) {
+		global $pagenow;
+
+		if ( ! is_admin() || ! self::include_column() ) {
+			return;
+		}
+
+		if ( isset( $_GET['post_type'] ) ) {
+			$type = empty( $_GET['post_type'] ) ? 'post' : $_GET['post_type'];
+		}
+
+		if ( is_admin() && $pagenow === 'edit.php' && ! empty( $_GET['published-by'] ) ) {
+			$query->query_vars['meta_key'] = self::$meta_key;
+			$query->query_vars['meta_value'] = $_GET['published-by'];
+		}
 	}
 
 } // end c2c_PublishedBy

@@ -7,6 +7,9 @@ class Published_By_Test extends WP_UnitTestCase {
 	protected static $meta_key = 'c2c-published-by';
 	protected static $default_c2c_published_by_post_status = array();
 
+	protected static $test_c2c_published_by_disable_filter_dropdown;
+	protected static $filter_default_c2c_published_by_disable_filter_dropdown;
+
 	/**
 	 * Test REST Server
 	 *
@@ -26,7 +29,11 @@ class Published_By_Test extends WP_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 		$this->unset_current_user();
+		unset( $this->test_c2c_published_by_disable_filter_dropdown );
+		unset( $GLOBALS['pagenow'] );
 
+		remove_filter( 'c2c_published_by_disable_filter_dropdown', '__return_true' );
+		remove_filteR( 'c2c_published_by_disable_filter_dropdown', array( $this, 'get_filter_default_c2c_published_by_disable_filter_dropdown' ), 11 );
 		remove_filter( 'c2c_published_by_post_status', array( $this, 'check_default_c2c_published_by_post_status' ) );
 		remove_filter( 'c2c_published_by_post_status', array( $this, 'c2c_published_by_post_status' ) );
 		remove_filter( 'c2c_published_by_skip_guessing', '__return_true' );
@@ -40,8 +47,8 @@ class Published_By_Test extends WP_UnitTestCase {
 	//
 
 
-	private function create_user( $set_as_current = true ) {
-		$user_id = $this->factory->user->create();
+	private function create_user( $set_as_current = true, $user_args = array() ) {
+		$user_id = $this->factory->user->create( $user_args );
 		if ( $set_as_current ) {
 			wp_set_current_user( $user_id );
 		}
@@ -90,6 +97,10 @@ class Published_By_Test extends WP_UnitTestCase {
 		return $post_statuses;
 	}
 
+	public function get_filter_default_c2c_published_by_disable_filter_dropdown( $default ) {
+		$this->filter_default_c2c_published_by_disable_filter_dropdown = $default;
+	}
+
 
 	//
 	//
@@ -104,6 +115,11 @@ class Published_By_Test extends WP_UnitTestCase {
 
 	public function test_class_is_available() {
 		$this->assertTrue( class_exists( 'c2c_PublishedBy' ) );
+	}
+
+	public function test_hooks_for_filtering_by_published_user() {
+		$this->assertEquals( 10, has_filter( 'parse_query',           array( 'c2c_PublishedBy', 'filter_by_query' )    ) );
+		$this->assertEquals( 10, has_action( 'restrict_manage_posts', array( 'c2c_PublishedBy', 'filter_by_dropdown' ) ) );
 	}
 
 	public function test_meta_key_not_created_for_post_saved_as_draft() {
@@ -292,6 +308,82 @@ class Published_By_Test extends WP_UnitTestCase {
 
 
 	/*
+	 * c2c_PublishedBy::filter_by_dropdown()
+	 */
+
+
+	public function test_filter_by_dropdown() {
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
+		$user1_id  = $this->create_user( true, array( 'first_name' => 'Test', 'last_name' => 'User', 'display_name' => 'Test User' ) );
+
+		$this->set_published_by( $post_id, $user1_id );
+
+		$expected = <<<HTML
+		<label class="screen-reader-text" for="filter-by-published-by">Filter by published by</label>
+		<select name="published-by" id="filter-by-published-by">
+			<option value="">All Published By</option>
+			<option value="{$user1_id}">Test User</option>
+		</select>
+
+HTML;
+		$this->expectOutputString( $expected );
+
+		c2c_PublishedBy::filter_by_dropdown( 'post' );
+	}
+
+	public function test_filter_by_dropdown_omit_dropdown_with_unsupported_post_type() {
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
+		$user1_id  = $this->create_user( true, array( 'first_name' => 'Test', 'last_name' => 'User', 'display_name' => 'Test User' ) );
+
+		$this->set_published_by( $post_id, $user1_id );
+
+		$this->expectOutputRegex( '//' );
+
+		c2c_PublishedBy::filter_by_dropdown( 'unknown' );
+	}
+
+	public function test_filter_by_dropdown_omits_dropdown_when_no_one_to_list() {
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_author' => $author_id ) );
+
+		$this->expectOutputRegex( '//' );
+
+		c2c_PublishedBy::filter_by_dropdown( 'post' );
+	}
+
+
+	/*
+	 * c2c_PublishedBy::filter_by_query()
+	 */
+
+
+	public function test_filter_by_query() {
+		$GLOBALS['pagenow'] = 'edit.php';
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
+		$user1_id  = $this->create_user( true, array( 'first_name' => 'Test', 'last_name' => 'User', 'display_name' => 'Test User' ) );
+
+		$this->set_published_by( $post_id, $user1_id );
+
+		$_GET['published-by'] = $user1_id;
+		$_GET['post_status']  = 'draft';
+
+		$wp_query = new WP_Query;
+		$wp_query->get_posts( array(
+			'ignore_sticky_posts' => true,
+			'post_status'         => 'all',
+			'post_type'           => 'post',
+			'posts_per_page'      => 5,
+			'suppress_filters'    => true,
+		) );
+
+		$this->assertEmpty( $wp_query->query_vars['meta_key'] );
+	}
+
+
+	/*
 	 * REST API
 	 */
 
@@ -316,6 +408,28 @@ class Published_By_Test extends WP_UnitTestCase {
 		$meta = (array) $data['meta'];
 		$this->assertArrayHasKey( self::$meta_key, $meta );
 		$this->assertEquals( $author_id, $meta[ self::$meta_key ] );
+	}
+
+
+	/**
+	 * Filter: c2c_published_by_disable_filter_dropdown
+	 */
+
+	public function test_filter_default_c2c_published_by_disable_filter_dropdown() {
+		add_filter( 'c2c_published_by_disable_filter_dropdown', array( $this, 'get_filter_default_c2c_published_by_disable_filter_dropdown' ), 11 );
+
+		// This shuod not output anything.
+		c2c_PublishedBy::filter_by_dropdown( 'unknown' );
+
+		$this->assertFalse( $this->filter_default_c2c_published_by_disable_filter_dropdown );
+	}
+
+	public function test_filter_true_c2c_published_by_disable_filter_dropdown() {
+		add_filter( 'c2c_published_by_disable_filter_dropdown', '__return_true' );
+		add_filter( 'c2c_published_by_disable_filter_dropdown', array( $this, 'get_filter_default_c2c_published_by_disable_filter_dropdown' ), 11 );
+
+		$this->assertEmpty( c2c_PublishedBy::filter_by_dropdown( 'post' ) );
+		$this->assertTrue( $this->filter_default_c2c_published_by_disable_filter_dropdown );
 	}
 
 
@@ -355,6 +469,42 @@ class Published_By_Test extends WP_UnitTestCase {
 		$this->assertEquals( $user_id, get_post_meta( $post_id, '_edit_last', true ) );
 		$this->assertEquals( 0, c2c_PublishedBy::get_publisher_id( $post_id ) );
 		$this->assertFalse( c2c_PublishedBy::is_publisher_id_guessed( $post_id ) );
+	}
+
+	//
+	// Late testing for functions that rely on is_admin() being true;
+	//
+
+	public function test_set_is_admin() {
+		$this->assertFalse( is_admin() );
+
+		define( 'WP_ADMIN', true );
+
+		$this->assertTrue( is_admin() );
+	}
+
+	public function test_filter_by_query_in_admin() {
+		$GLOBALS['pagenow'] = 'edit.php';
+		$author_id = $this->create_user( false );
+		$post_id   = $this->factory->post->create( array( 'post_status' => 'draft', 'post_author' => $author_id ) );
+		$user1_id  = $this->create_user( true, array( 'first_name' => 'Test', 'last_name' => 'User', 'display_name' => 'Test User' ) );
+
+		$this->set_published_by( $post_id, $user1_id );
+
+		$_GET['published-by'] = $user1_id;
+		$_GET['post_status']  = 'all';
+
+		$wp_query = new WP_Query;
+		$wp_query->get_posts( array(
+			'ignore_sticky_posts' => true,
+			'post_status'         => 'all',
+			'post_type'           => 'post',
+			'posts_per_page'      => 5,
+			'suppress_filters'    => true,
+		) );
+
+		$this->assertEquals( 'c2c-published-by', $wp_query->query_vars['meta_key'] );
+		$this->assertEquals( $user1_id, $wp_query->query_vars['meta_value'] );
 	}
 
 }

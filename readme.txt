@@ -14,7 +14,7 @@ Track which user actually published a post, separate from who created the post. 
 
 This plugin records which user actually published a post, which in a multi-author environment may not always be the original post author. This helps to maintain accountability for who was ultimately responsible for a post appearing live on a site.
 
-The admin listing of posts is amended with a new "Published By" column that shows the name of the person who published the post (for those posts that have actually been published).
+The admin listing of posts is amended with a new "Published By" column that shows the name of the person who published the post (for those posts that have actually been published). A dropdown above admin post listings allows for the listing to be filtered by a particular publishing user (but only includes posts with a known publishing user).
 
 For posts that were published prior to the use of this plugin (and thus the plugin could not directly record who published those posts), the plugin makes a best guess attempt to ascertain who published the post. After failing to find the publisher of the post as recorded by the plugin, it checks for who last edited the post, then who is responsible for the latest revision of the post, and finally failing those, it assumes it was the post author. In cases where it had to go through this process, the name of the person it deduced as the likely publisher appears italicized and with a question mark at the end. If you'd rather the plugin not make an attempt to guess the publisher, you can disable the checks by including this snippet in your theme's functions.php (or, ideally, a site-specific mu-plugin):
 
@@ -35,6 +35,7 @@ Links: [Plugin Homepage](http://coffee2code.com/wp-plugins/published-by/) | [Plu
 1. A screenshot of the admin post listing showing the added "Published By" column. It demonstrates the mix of a post puublished by the current user, a post poblished by another user and two posts that existed before the plugin was activated (one guessed to be published by the current user and one guessed to be published by yet another user).
 2. A screenshot of the Publish metabox for a published post showing the current user who published the post.
 3. A screenshot of the Publish metabox for a published post showing another user who published the post.
+4. A screenshot of the post listing dropdown for filtering posts by publishing user.
 
 
 == Frequently Asked Questions ==
@@ -59,6 +60,7 @@ Yes.
 == Changelog ==
 
 = () =
+* New: Add ability to filter post listings by the publishing user
 * Fix: Show column even when post listing is being filtered
 * Fix: Properly close a 'span' tag
 * Change: Ensure user profile URL is sanitized before display (hardening)
