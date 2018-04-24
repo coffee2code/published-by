@@ -465,7 +465,7 @@ class c2c_PublishedBy {
 			uasort( $users, function ( $a, $b ) { return strnatcmp( $a->display_name, $b->display_name ); } );
 			$current = empty( $_GET['published-by'] ) ? '' : $_GET['published-by'];
 			foreach ( $users as $user_id => $user ) {
-				printf( '<option value="%s"%s>%s</option>', esc_attr( $user_id ), selected( $user_id, $current, true ), $user->display_name );
+				printf( "\t\t\t<option value=\"%s\"%s>%s</option>\n", esc_attr( $user_id ), selected( $user_id, $current, true ), $user->display_name );
 			}
 ?>
 		</select>

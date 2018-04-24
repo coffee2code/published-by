@@ -60,7 +60,7 @@ Yes.
 == Changelog ==
 
 = () =
-* New: Add ability to filter post listings by the publishing user
+* New: Add ability to filter the admin listing of posts by the publishing user
 * Fix: Show column even when post listing is being filtered
 * Fix: Properly close a 'span' tag
 * Change: Ensure user profile URL is sanitized before display (hardening)
