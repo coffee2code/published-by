@@ -6,7 +6,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 4.6
 Tested up to: 4.9
-Stable tag: 1.2
+Stable tag: 1.3
 
 Track which user actually published a post, separate from who created the post. Display that info as a column in admin post listings.
 
@@ -59,7 +59,7 @@ Yes.
 
 == Changelog ==
 
-= 1.3 () =
+= 1.3 (2018-04-24) =
 * New: Add ability to filter the admin listing of posts by the publishing user
 * New: Delete reference to user when user is deleted, or reassign to another user if deleted user's posts/comments get reassigned
 * Fix: Show column even when post listing is being filtered
@@ -133,6 +133,9 @@ Yes.
 
 
 == Upgrade Notice ==
+
+= 1.3 =
+Recommended feature update: added dropdown to filter post listings by published-by user, fixed bug preventing 'Published By' column from showing when post listing is filtered, delete meta field when user is deleted, noted compatibility through WP 4.9+, updated copyright date (2018), and more
 
 = 1.2 =
 Recommended feature update: linked usernames to profiles, noted guessed publisher with italics and question mark, referred to currenet user as "you", registered meta field for REST API compatibility, compatibility is now WP 4.6-4.7+, updated copyright date (2017), and more

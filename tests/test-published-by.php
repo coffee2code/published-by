@@ -110,7 +110,7 @@ class Published_By_Test extends WP_UnitTestCase {
 
 
 	public function test_plugin_version() {
-		$this->assertEquals( '1.2', c2c_PublishedBy::version() );
+		$this->assertEquals( '1.3', c2c_PublishedBy::version() );
 	}
 
 	public function test_class_is_available() {

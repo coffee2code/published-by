@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Published By
- * Version:     1.2
+ * Version:     1.3
  * Plugin URI:  http://coffee2code.com/wp-plugins/published-by/
  * Author:      Scott Reilly
  * Author URI:  http://coffee2code.com/
@@ -18,7 +18,7 @@
  *
  * @package Published_By
  * @author  Scott Reilly
- * @version 1.2
+ * @version 1.3
  */
 
 /*
@@ -96,7 +96,7 @@ class c2c_PublishedBy {
 	 * @since 1.0
 	 */
 	public static function version() {
-		return '1.2';
+		return '1.3';
 	}
 
 	/**
