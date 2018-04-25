@@ -154,6 +154,8 @@ class Published_By_Test extends WP_UnitTestCase {
 
 		$this->assertEquals( $user_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
 		$this->assertEquals( $user_id, get_post_meta( $post_id, self::$meta_key, true ) );
+
+		return array( $post_id, $user_id );
 	}
 
 	public function test_meta_key_updated_for_republished_post() {
@@ -248,6 +250,31 @@ class Published_By_Test extends WP_UnitTestCase {
 		wp_update_post( $post );
 
 		$this->assertEquals( $user_id1, c2c_PublishedBy::get_publisher_id( $post_id ) );
+	}
+
+	public function tests_meta_key_is_deleted_when_user_is_deleted() {
+		list( $post_id, $user_id ) = $this->test_meta_key_created_for_published_post();
+
+		/** Include admin user functions to get access to wp_delete_user() */
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+
+		wp_delete_user( $user_id );
+
+		$this->assertEmpty( get_post_meta( $post_id, self::$meta_key, true ) );
+	}
+
+	public function tests_meta_key_is_reassigned_when_user_is_deleted_with_reassignment() {
+		list( $post_id, $user_id ) = $this->test_meta_key_created_for_published_post();
+
+		$user2_id  = $this->create_user( false );
+
+		/** Include admin user functions to get access to wp_delete_user() */
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+
+		wp_delete_user( $user_id, $user2_id );
+
+		$this->assertEquals( $user2_id, c2c_PublishedBy::get_publisher_id( $post_id ) );
+		$this->assertEquals( $user2_id, get_post_meta( $post_id, self::$meta_key, true ) );
 	}
 
 

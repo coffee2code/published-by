@@ -131,6 +131,8 @@ class c2c_PublishedBy {
 		add_filter( 'parse_query',                 array( __CLASS__, 'filter_by_query' )               );
 		add_action( 'restrict_manage_posts',       array( __CLASS__, 'filter_by_dropdown' )            );
 
+		add_action( 'deleted_user',                array( __CLASS__, 'deleted_user' ), 10, 2           );
+
 		self::register_meta();
 	}
 
@@ -148,6 +150,46 @@ class c2c_PublishedBy {
 			'auth_callback'     => '__return_false',
 			'show_in_rest'      => true,
 		) );
+	}
+
+	/**
+	 * Removes record of publishing user when user is deleted, unless their
+	 * ownership of things is being reassigned, in which case change the
+	 * publisheding user to the reassigned user.
+	 *
+	 * @since 1.3
+	 *
+	 * @param int      $id       ID of the deleted user.
+	 * @param int|null $reassign ID of the user to reassign posts and links to.
+	 *                           Default null, for no reassignment.
+	 */
+	public static function deleted_user( $user_id, $reassign ) {
+		if ( $reassign ) {
+			global $wpdb;
+
+			// Get IDs of posts that have the deleted user assigned as publishing user.
+			$post_ids = $wpdb->get_col( $wpdb->prepare(
+				"SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s",
+				self::$meta_key,
+				$user_id
+			) );
+
+			// Reassign publishing user.
+			$wpdb->update(
+				$wpdb->postmeta,
+				array( 'meta_value' => $reassign ),
+				array( 'meta_key'   => self::$meta_key ),
+				array( '%d' ),
+				array( '%s' )
+			);
+
+			// Clear post_meta cache for affected posts.
+			foreach ( $post_ids as $p_id ) {
+				wp_cache_delete( $p_id, 'post_meta' );
+			}
+		} else {
+			delete_metadata( 'post', null, self::$meta_key, $user_id, true );
+		}
 	}
 
 	/**

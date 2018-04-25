@@ -59,8 +59,9 @@ Yes.
 
 == Changelog ==
 
-= () =
+= 1.3 () =
 * New: Add ability to filter the admin listing of posts by the publishing user
+* New: Delete reference to user when user is deleted, or reassign to another user if deleted user's posts/comments get reassigned
 * Fix: Show column even when post listing is being filtered
 * Fix: Properly close a 'span' tag
 * Change: Ensure user profile URL is sanitized before display (hardening)
