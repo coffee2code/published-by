@@ -138,10 +138,10 @@ Yes.
 Recommended feature update: linked usernames to profiles, noted guessed publisher with italics and question mark, referred to currenet user as "you", registered meta field for REST API compatibility, compatibility is now WP 4.6-4.7+, updated copyright date (2017), and more
 
 = 1.1 =
-Minor update: improve support for localization; verified compatibility through WP 4.4; updated copyright date (2016)
+Minor update: improved support for localization; verified compatibility through WP 4.4; updated copyright date (2016)
 
 = 1.0.3 =
-Minor bugfix release for users running PHP 5.2.x: revert use of a constant only defined in PHP 5.3+. You really should upgrade your PHP or your host if this affects you. Also noted compatibility with WP 4.3+.
+Minor bugfix release for users running PHP 5.2.x: reverted use of a constant only defined in PHP 5.3+. You really should upgrade your PHP or your host if this affects you. Also noted compatibility with WP 4.3+.
 
 = 1.0.2 =
 Trivial update: minor additions to unit tests; noted compatibility through WP 4.1+; updated copyright date (2015)
